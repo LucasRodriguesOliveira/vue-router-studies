@@ -28,6 +28,10 @@ export default {
 </script>
 
 <style scoped>
+  body {
+    scroll-behavior: smooth;
+  }
+
   .slide-enter, .slide-leave-to {
     transform: translateX(-50px);
     opacity: 0;

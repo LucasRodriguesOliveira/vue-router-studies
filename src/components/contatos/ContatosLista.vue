@@ -25,6 +25,7 @@
 
 <script>
 import ContatosListaItem from './ContatosListaitem';
+import EventBus from '../../event-bus';
 
 export default {
   components: {
@@ -33,11 +34,7 @@ export default {
   props: ['busca'],
   data() {
     return {
-      contatos: [
-        { id: 1, nome: 'Lucas Oliveira', email: 'lucasoliveira@email.com' },
-        { id: 2, nome: 'Ana Flávia', email: 'ana@email.com' },
-        { id: 3, nome: 'Maria Clara', email: 'maria@email.com' }
-      ]
+      contatos: []
     }
   },
   computed: {
@@ -48,6 +45,9 @@ export default {
         this.contatos.filter(item =>
         item.nome.toLowerCase().includes(busca.toLowerCase()));
     }
+  },
+  created() {
+    this.contatos = EventBus.contacts;
   },
   methods: {
     voltar() { this.$router.back(); },

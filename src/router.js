@@ -1,14 +1,14 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
-import Contatos from './views/Contatos/Contatos';
-import ContatoDetalhes from './views/Contatos/ContatoDetalhes';
-import ContatoEditar from './views/Contatos/ContatoEditar';
-import ContatoHome from './views/Contatos/ContatosHome';
-import Home from './views/Home';
-import Erro404 from './views/Erro404';
-import Erro404Contatos from './views/Contatos/Erro404';
-import Login from './views/login/Login';
+const Home = () => import('./views/Home');
+const Contatos = () => import(/* webpackChunkName: "contatos" */'./views/Contatos/Contatos');
+const ContatoDetalhes = () => import(/* webpackChunkName: "contatos" */'./views/Contatos/ContatoDetalhes');
+const ContatoEditar = () => import(/* webpackChunkName: "contatos" */'./views/Contatos/ContatoEditar');
+const ContatoHome = () => import(/* webpackChunkName: "contatos" */'./views/Contatos/ContatosHome');
+const Erro404 = () => import('./views/Erro404');
+const Erro404Contatos = () => import('./views/Contatos/Erro404');
+const Login = () => import('./views/login/Login');
 import EventBus from './event-bus';
 
 Vue.use(VueRouter);
@@ -18,15 +18,33 @@ const validarId = r => ({ id: +r.params.id });
 const router = new VueRouter({
   mode: "history",
   linkActiveClass: 'active',
+  scrollBehavior(...p) {
+    return new Promise((res) => {
+      setTimeout(() => {
+        if(p[2]) {
+          return res(p[2]);
+        }
+        else if(p[0].hash)
+          return res({
+            selector: p[0].hash,
+            offset: {
+              x: 0, y: 0
+            }
+          });
+        else {
+          return res({
+            x: 0, y: 0
+          });
+        }
+      }, 3000);
+    });
+    
+  },
   routes: [
     {
       path: '/contatos',
       component: Contatos,
       alias: ['/meus-contatos', '/lista-de-contatos'],
-      // props: route => {
-      //   const busca = route.query.busca;
-      //   return busca ? { busca } : {};
-      // },
       props: r => r.query.busca ? { busca: r.query.busca } : {},
       children: [
         {
